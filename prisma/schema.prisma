@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  INVESTOR
+  FARMER
+  ADMIN
+}
+
+enum CropCycle {
+  SHORT
+  MEDIUM
+  LONG
+}
+
+enum InvestmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(INVESTOR)
+  document     String? // NIF ou Identidade
+  location     String? // Para agricultores
+  createdAt    DateTime @default(now())
+
+  crops       Crop[] // Safras criadas (se for Farmer)
+  investments Investment[] // Investimentos feitos (se for Investor)
+}
+
+model Crop {
+  id               String    @id @default(uuid())
+  title            String
+  description      String
+  farmerId         String
+  farmer           User      @relation(fields: [farmerId], references: [id])
+  cycle            CropCycle
+  expectedReturn   Float // Ex: 12.5
+  goalAmount       Float // Valor necessário
+  raisedAmount     Float     @default(0)
+  startDate        DateTime
+  estimatedEndDate DateTime
+  status           String    @default("OPEN") // OPEN, IN_PROGRESS, HARVESTED
+
+  investments Investment[]
+}
+
+model Investment {
+  id         String           @id @default(uuid())
+  amount     Float
+  status     InvestmentStatus @default(PENDING)
+  investorId String
+  investor   User             @relation(fields: [investorId], references: [id])
+  cropId     String
+  crop       Crop             @relation(fields: [cropId], references: [id])
+  proofUrl   String? // Link do comprovante PIX/Transferência
+  createdAt  DateTime         @default(now())
+}
