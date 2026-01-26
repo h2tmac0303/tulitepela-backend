@@ -17,4 +17,21 @@ export class AuthController {
         .json({ message: "Erro interno", details: error.message });
     }
   }
+
+  // Adicione ao seu AuthController
+  async handleLogin(req: Request, res: Response) {
+    try {
+      const { email, password } = req.body;
+      const result = await authService.loginUser({ email, password });
+
+      return res.status(200).json(result);
+    } catch (error: any) {
+      if (error.message === "INVALID_CREDENTIALS") {
+        return res.status(401).json({ message: "E-mail ou senha incorretos." });
+      }
+      return res
+        .status(500)
+        .json({ message: "Erro interno no login", details: error.message });
+    }
+  }
 }

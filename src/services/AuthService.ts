@@ -24,4 +24,24 @@ export class AuthService {
     const { passwordHash: _, ...userWithoutPassword } = user;
     return { user: userWithoutPassword, token };
   }
+
+async loginUser({ email, password }: any) {
+  // 1. Busca o usuário pelo e-mail
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) throw new Error("INVALID_CREDENTIALS");
+
+  // 2. Compara a senha enviada com o hash salvo no banco
+  const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+  if (!isPasswordValid) throw new Error("INVALID_CREDENTIALS");
+
+  // 3. Gera o Token JWT
+  const token = jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.JWT_SECRET as string,
+    { expiresIn: '7d' }
+  );
+
+  const { passwordHash: _, ...userWithoutPassword } = user;
+  return { user: userWithoutPassword, token };
+}
 }
