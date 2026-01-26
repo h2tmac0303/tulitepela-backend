@@ -1,19 +1,28 @@
-import 'dotenv/config';
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { authRoutes } from "./http/routes/auth.routes";
-import { investmentRoutes } from './http/routes/investment.routes';
-import { cropRoutes } from './http/routes/crop.routes';
+import { investmentRoutes } from "./http/routes/investment.routes";
+import { cropRoutes } from "./http/routes/crop.routes";
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3333;
 
-app.use(cors());
+// Configuração do CORS
+app.use(
+  cors({
+    // Em produção, mude para a URL do seu domínio (ex: https://tulitepela.com)
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
 app.use(express.json());
 
 app.use("/auth", authRoutes);
-app.use('/crops', cropRoutes);
-app.use('/investments', investmentRoutes);
+app.use("/crops", cropRoutes);
+app.use("/investments", investmentRoutes);
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`🚀 Tulitepela API running on port ${PORT}`);
 });
