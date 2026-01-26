@@ -15,4 +15,13 @@ export class InvestmentController {
       return res.status(400).json({ message: error.message });
     }
   }
+  async handleListByInvestor(req: Request, res: Response) {
+  try {
+    const investorId = req.user.id;
+    const investments = await investmentService.listByInvestor(investorId);
+    return res.status(200).json(investments);
+  } catch (error) {
+    return res.status(500).json({ message: "Erro ao buscar seus investimentos." });
+  }
+}
 }

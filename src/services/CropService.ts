@@ -12,16 +12,25 @@ export class CropService {
         farmerId: data.farmerId,
         startDate: new Date(),
         estimatedEndDate: data.estimatedEndDate,
-      }
+      },
     });
   }
 
   async listOpenCrops() {
     return await prisma.crop.findMany({
-      where: { status: 'OPEN' },
-      include: { 
-        farmer: { select: { name: true, location: true } } 
-      }
+      where: { status: "OPEN" },
+      include: {
+        farmer: { select: { name: true, location: true } },
+      },
+    });
+  }
+
+  // src/services/CropService.ts
+
+  async listByFarmer(farmerId: string) {
+    return await prisma.crop.findMany({
+      where: { farmerId },
+      orderBy: { startDate: "desc" },
     });
   }
 }

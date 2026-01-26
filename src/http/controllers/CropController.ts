@@ -20,4 +20,14 @@ export class CropController {
     const crops = await cropService.listOpenCrops();
     return res.status(200).json(crops);
   }
+
+async handleListByFarmer(req: Request, res: Response) {
+  try {
+    const farmerId = req.user.id; // ID extraído do token pelo authMiddleware
+    const crops = await cropService.listByFarmer(farmerId);
+    return res.status(200).json(crops);
+  } catch (error) {
+    return res.status(500).json({ message: "Erro ao buscar suas safras." });
+  }
+}
 }

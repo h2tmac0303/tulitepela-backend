@@ -21,4 +21,14 @@ export class InvestmentService {
       return investment;
     });
   }
+  async listByInvestor(investorId: string) {
+  return await prisma.investment.findMany({
+    where: { investorId },
+    include: {
+      crop: {
+        select: { title: true, status: true, expectedReturn: true }
+      }
+    }
+  });
+}
 }
