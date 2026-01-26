@@ -7,6 +7,10 @@ const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
 const setupPrisma = () => {
   const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("🚨 DATABASE_URL não encontrada no arquivo .env");
+}
   
   // Criamos o Pool do Postgres
   const pool = new Pool({ connectionString });

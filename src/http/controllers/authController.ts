@@ -1,5 +1,5 @@
-import type { Request, Response } from 'express';
-import { AuthService } from '../../services/AuthService.js';
+import type { Request, Response } from "express";
+import { AuthService } from "../../services/AuthService.js";
 
 const authService = new AuthService();
 
@@ -12,7 +12,9 @@ export class AuthController {
       if (error.message === "USER_ALREADY_EXISTS") {
         return res.status(400).json({ message: "Usuário já cadastrado" });
       }
-      return res.status(500).json({ message: "Erro interno" });
+      return res
+        .status(500)
+        .json({ message: "Erro interno", details: error.message });
     }
   }
 }
