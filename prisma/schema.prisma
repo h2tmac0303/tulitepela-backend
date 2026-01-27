@@ -49,6 +49,7 @@ model Crop {
   id               String    @id @default(uuid())
   title            String
   description      String
+  culture          String
   farmerId         String
   farmer           User      @relation(fields: [farmerId], references: [id])
   cycle            CropCycle
