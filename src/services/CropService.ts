@@ -1,17 +1,28 @@
 import { prisma } from "../config/database.js";
 
+interface CreateCropData {
+  title: string;
+  description: string;
+  culture: string;
+  farmName: string;
+  location: string;
+  cycle: "SHORT" | "MEDIUM" | "LONG";
+  expectedReturn: number;
+  goalAmount: number;
+  estimatedEndDate: string;
+  imageUrl?: string;
+  farmerId: string;
+}
 export class CropService {
-  async createCrop(data: any) {
+  async createCrop(data: CreateCropData) {
     return await prisma.crop.create({
       data: {
-        title: data.title,
-        description: data.description,
-        goalAmount: data.goalAmount,
-        expectedReturn: data.expectedReturn,
-        cycle: data.cycle,
-        farmerId: data.farmerId,
+        ...data,
+        goalAmount: Number(data.goalAmount),
+        expectedReturn: Number(data.expectedReturn),
         startDate: new Date(),
-        estimatedEndDate: data.estimatedEndDate,
+        estimatedEndDate: new Date(data.estimatedEndDate),
+        status: "OPEN",
       },
     });
   }
@@ -32,5 +43,15 @@ export class CropService {
       where: { farmerId },
       orderBy: { startDate: "desc" },
     });
+  }
+
+  async deleteCrop(id: string, farmerId: string) {
+    const crop = await prisma.crop.findUnique({ where: { id } });
+
+    if (!crop) throw new Error("Safra não encontrada");
+    if (crop.farmerId !== farmerId) throw new Error("Não autorizado");
+    if (crop.raisedAmount > 0) throw new Error("Possui investimentos ativos");
+
+    return await prisma.crop.delete({ where: { id } });
   }
 }

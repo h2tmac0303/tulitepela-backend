@@ -46,4 +46,17 @@ export class CropController {
       return res.status(500).json({ message: "Erro ao buscar suas safras." });
     }
   }
+
+async handleDelete(req: Request, res: Response) {
+    try {
+      const id = req.params.id as string;
+      const farmerId = req.user.id;
+
+      await cropService.deleteCrop(id, farmerId);
+      return res.status(204).send();
+    } catch (error: any) {
+      const status = error.message === "Não autorizado" ? 403 : 400;
+      return res.status(status).json({ message: error.message });
+    }
+  }
 }

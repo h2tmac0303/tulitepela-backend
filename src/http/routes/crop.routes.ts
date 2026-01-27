@@ -12,5 +12,6 @@ cropRoutes.get('/open', cropController.handleListOpen);
 // PRIVADO (Agricultor): Criar e gerenciar suas próprias safras
 cropRoutes.post('/', authMiddleware, roleMiddleware(['FARMER']), cropController.handleCreate);
 cropRoutes.get('/my-crops', authMiddleware, roleMiddleware(['FARMER']), cropController.handleListByFarmer);
+cropRoutes.delete('/:id', authMiddleware, roleMiddleware(['FARMER']), cropController.handleDelete);
 
 export { cropRoutes };
