@@ -7,13 +7,13 @@ import { cropRoutes } from "./http/routes/crop.routes";
 
 const app = express();
 const PORT = process.env.PORT || 3333;
-
+const origins = process.env.ALLOWED_ORIGINS?.split(",") || [];
 // Configuração do CORS
 app.use(
   cors({
-    // Em produção, mude para a URL do seu domínio (ex: https://tulitepela.com)
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    origin: origins,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
