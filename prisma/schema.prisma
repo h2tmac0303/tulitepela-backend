@@ -59,8 +59,8 @@ model Crop {
   startDate        DateTime
   estimatedEndDate DateTime
   status           String       @default("OPEN") // OPEN, IN_PROGRESS, HARVESTED
-  location         String // Adicionado
-  farmName         String // Adicionado
+  location         String 
+  farmName         String 
   imageUrl         String? // Adicionado: Link para a foto da plantação
   investments      Investment[]
 }
