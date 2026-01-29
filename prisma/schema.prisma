@@ -29,6 +29,7 @@ enum InvestmentStatus {
   PENDING
   CONFIRMED
   COMPLETED
+  REJECTED    // Adicione esta linha
 }
 
 model User {
