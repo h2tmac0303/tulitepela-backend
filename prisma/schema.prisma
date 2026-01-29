@@ -66,13 +66,14 @@ model Crop {
 }
 
 model Investment {
-  id         String           @id @default(uuid())
-  amount     Float
-  status     InvestmentStatus @default(PENDING)
-  investorId String
-  investor   User             @relation(fields: [investorId], references: [id])
-  cropId     String
-  crop       Crop             @relation(fields: [cropId], references: [id])
-  proofUrl   String? // Link do comprovante PIX/Transferência
-  createdAt  DateTime         @default(now())
+  id              String   @id @default(uuid())
+  amount          Float
+  proofUrl        String?  // Link do comprovativo (Uploadthing/Firebase)
+  status          InvestmentStatus @default(PENDING)
+  investorId      String
+  cropId          String
+  createdAt       DateTime @default(now())
+  
+  investor        User     @relation(fields: [investorId], references: [id])
+  crop            Crop     @relation(fields: [cropId], references: [id])
 }
